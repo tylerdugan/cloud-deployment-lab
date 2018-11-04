@@ -34,10 +34,20 @@ app.get('/greeting', (request, response) => {
   }
 
 app.get('/todo', async (request, response) => {
+  var todo;
   try {
-    const todo = await axios.get('https://jsonplaceholder.typicode.com/todos/1')
-      .then(res => res.data);
-    response.json(todo);
+    /**
+    Default to user ID 1 if one isn't given in URL
+    **/
+    if(request.query.id == undefined){
+      todo = await axios.get('https://jsonplaceholder.typicode.com/todos/1')
+        .then(res => res.data);
+      response.json(todo);
+    }else{
+      todo = await axios.get('https://jsonplaceholder.typicode.com/todos/' + request.query.id)
+              .then(res => res.data);
+            response.json(todo);
+    }
   } catch (e) {
     console.log(e);
   }
